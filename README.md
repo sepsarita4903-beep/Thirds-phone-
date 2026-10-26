@@ -1,2 +1,2 @@
-# Thirds-phone-
+# Thirds-phone
 Character Phone Simulator
