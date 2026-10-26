@@ -4,53 +4,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Third's Phone</title>
+<title>Third's Phone ♡</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #e7e0dc;
-  color: #35312f;
-}
-.phone {
-  max-width: 390px;
-  min-height: 100vh;
-  margin: auto;
-  padding: 24px;
-  box-sizing: border-box;
-  background: linear-gradient(160deg, #d9e6dd, #f6e8e3);
-}
-h1 { font-size: 28px; }
-.card {
-  background: #ffffffbb;
-  border-radius: 20px;
-  padding: 18px;
-  margin: 14px 0;
-}
-button {
-  border: 0;
-  border-radius: 14px;
-  padding: 12px;
-  margin: 4px;
-  background: #8cae9c;
-  color: white;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#e8e4df;color:#373b36;font-family:Arial,sans-serif}
+.phone{max-width:400px;min-height:100vh;margin:auto;background:#f5f0e9;padding:20px}
+.status{display:flex;justify-content:space-between;font-size:13px}
+header{text-align:center;padding:20px 0}
+header h1{font-size:27px;margin:8px}
+.muted{color:#858980;font-size:13px}
+.card{background:#fffdf9;border-radius:20px;padding:17px;margin:12px 0;box-shadow:0 3px 12px #7771}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.app{border:0;background:transparent;color:inherit;text-align:center;font-size:12px}
+.app span{display:flex;background:#dce7dd;border-radius:20px;height:65px;align-items:center;justify-content:center;font-size:27px;margin-bottom:7px}
+button{cursor:pointer}
+.btn{border:0;border-radius:13px;background:#8ca994;color:white;padding:11px 14px}
+input,textarea{width:100%;padding:12px;border:1px solid #dddcd3;border-radius:13px;background:white;font:inherit}
+.row{display:flex;gap:8px;margin-top:10px}
+.row input{min-width:0}
+.row button{flex-shrink:0}
+.chat{background:#e0eade;padding:10px 13px;border-radius:15px;margin:8px 0;max-width:85%;overflow-wrap:anywhere}
+.mine{background:#d8c8ba;margin-left:auto}
+#content{min-height:55vh}
+.back{border:0;background:transparent;padding:8px 0;color:#617c68}
+.photo{background:linear-gradient(135deg,#d5e1d5,#f0dcd1);height:100px;border-radius:15px;display:grid;place-items:center;font-size:35px}
+.lock{position:fixed;inset:0;background:linear-gradient(160deg,#d5e4d9,#f3e4d9);display:none;align-items:center;justify-content:center;text-align:center;padding:25px;z-index:5}
+.lock h1{font-size:65px;margin:10px}
+footer{text-align:center;font-size:11px;color:#8b8c83;padding:20px}
 </style>
 </head>
 <body>
 <div class="phone">
-  <p>9:41　● Wi-Fi ▰</p>
-  <h1>Third's Phone ♡</h1>
-  <div class="card">
-    <h2>เติร์ด จรัสเดชา</h2>
-    <p>ยินดีต้อนรับสู่โทรศัพท์ของเติร์ด</p>
-  </div>
-  <div class="card">
-    <button onclick="alert('ยังไม่มีข้อความใหม่ครับ ♡')">💬 Messages</button>
-    <button onclick="alert('ยังไม่มีรูปภาพครับ')">🖼️ Photos</button>
-    <button onclick="alert('เปิดเพลย์ลิสต์ของเติร์ด 🎵')">🎵 Music</button>
-    <button onclick="alert('สวัสดีครับ!')">📱 Social</button>
+  <div class="status"><span id="clock">9:41</span><span>● Wi-Fi ▰</span></div>
+  <header>
+    <div style="font-size:35px">♡</div>
+    <h1>Third's Phone</h1>
+    <div class="muted">PERSONAL DEVICE · จรัสเดชา</div>
+  </header>
+  <main id="content"></main>
+  <footer>made with ♡ for Third</footer>
+</div>
+
+<div class="lock" id="lock">
+  <div>
+    <div class="muted">THIRD'S IPHONE</div>
+    <h1 id="locktime">9:41</h1>
+    <p>เติร์ด จรัสเดชา ♡</p>
+    <p>ปัดใจมาปลดล็อกโทรศัพท์</p>
+    <button class="btn" onclick="unlock()">♡ ปลดล็อก</button>
   </div>
 </div>
+
+<script>
+const content=document.getElementById('content');
+let messages=[
+ {text:'วันนี้เป็นไงบ้างครับ',mine:false},
+ {text:'เติร์ดว่างแล้วทักมาหาได้นะ ♡',mine:false}
+];
+let notes=localStorage.getItem('thirdNote')||'';
+let playing=false, effects=true;
+
+function home(){
+ content.innerHTML=`
+ <div class="card">
+  <div class="muted">TODAY'S NOTE</div>
+  <h3>Have a lovely day ♡</h3>
+  <p>ยินดีต้อนรับสู่โทรศัพท์ของเติร์ด</p>
+ </div>
+ <div class="grid">
+  <button class="app" onclick="openApp('Messages')"><span>💬</span>Messages</button>
+  <button class="app" onclick="openApp('Photos')"><span>🖼️</span>Photos</button>
+  <button class="app" onclick="openApp('Music')"><span>🎵</span>Music</button>
+  <button class="app" onclick="openApp('Social')"><span>📱</span>Social</button>
+  <button class="app" onclick="openApp('Notes')"><span>📝</span>Notes</button>
+  <button class="app" onclick="openApp('Settings')"><span>⚙️</span>Settings</button>
+ </div>
+ <div class="card" onclick="openApp('Messages')">
+  💌 <b>Messages</b><p class="muted">มีข้อความรออ่านอยู่ ♡</p>
+ </div>
+ <button class="btn" onclick="lockPhone()">🔒 ล็อกหน้าจอ</button>`;
+}
+
+function shell(name,html){
+ content.innerHTML=`<button class="back" onclick="home()">← หน้าจอหลัก</button>
+ <h2>${name}</h2>${html}`;
+}
+
+function openApp(name){
+ if(name==='Messages'){
+  shell('💬 Messages',`<div id="chats"></div>
+  <div class="row"><input id="msg" placeholder="พิมพ์ข้อความ..." />
+  <button class="btn" onclick="sendMsg()">ส่ง</button></div>`);
+  renderChats();
+ }
+ if(name==='Photos'){
+  shell('🖼️ Photos',`<p class="muted">MEMORIES · อัลบั้มของเติร์ด</p>
+  <div class="grid">
+  <div><div class="photo">🌿</div><p>Little moments</p></div>
+  <div><div class="photo">☁️</div><p>Sky diary</p></div>
+  <div><div class="photo">☕</div><p>My day</p></div>
+  </div><p class="muted">นี่คือภาพตัวอย่าง สามารถเปลี่ยนเป็นรูปของคุณได้ภายหลัง</p>`);
+ }
+ if(name==='Music'){
+  shell('🎵 Music',`<div class="card" style="text-align:center">
+  <div style="font-size:65px">🎧</div><h3>Third's Playlist</h3>
+  <p>เพลงโปรด · Track 01</p>
+  <button class="btn" onclick="toggleMusic()" id="playbtn">${playing?'Ⅱ Pause':'▶ Play'}</button>
+  <p id="musicstatus" class="muted">${playing?'กำลังเล่นตัวอย่างเพลย์ลิสต์':'กด Play เพื่อเริ่ม'}</p>
+  </div><p class="muted">ปุ่มนี้จำลองสถานะเครื่องเล่น ยังไม่ได้เชื่อมไฟล์เสียงจริง</p>`);
+ }
+ if(name==='Social'){
+  shell('📱 Social',`<div class="card"><b>third.jd ♡</b>
+  <div class="photo" style="margin-top:12px">🌅</div>
+  <p>วันนี้ท้องฟ้าสวยดี ☁️</p><span class="muted">♡ 128 likes · 24 comments</span></div>
+  <div class="card"><b>third.j d</b><p>วันหยุดที่ได้พักจริง ๆ สักที</p><span class="muted">♡ 86 likes</span></div>`);
+ }
+ if(name==='Notes'){
+  shell('📝 Notes',`<p class="muted">PERSONAL NOTES · บันทึกของเติร์ด</p>
+  <textarea id="note" rows="8" placeholder="เขียนอะไรไว้ตรงนี้...">${escapeHTML(notes)}</textarea>
+  <button class="btn" style="margin-top:10px" onclick="saveNote()">บันทึกโน้ต</button>
+  <p id="notestatus" class="muted"></p>`);
+ }
+ if(name==='Settings'){
+  shell('⚙️ Settings',`<div class="card"><p>ชื่ออุปกรณ์</p><b>Third's iPhone</b></div>
+  <div class="card"><p>เอฟเฟกต์หน้าจอ</p><button class="btn" onclick="toggleEffects()">เอฟเฟกต์: ${effects?'เปิด':'ปิด'}</button></div>
+  <button class="btn" onclick="lockPhone()">🔒 ล็อกหน้าจอ</button>`);
+ }
+}
+
+function renderChats(){
+ const area=document.getElementById('chats');
+ area.innerHTML=messages.map(m=>`<div class="chat ${m.mine?'mine':''}">${escapeHTML(m.text)}</div>`).join('');
+ area.scrollTop=area.scrollHeight;
+}
+function sendMsg(){
+ const input=document.getElementById('msg');
+ const text=input.value.trim();
+ if(!text)return;
+ messages.push({text,mine:true});
+ messages.push({text:reply(text),mine:false});
+ renderChats();
+ input.value='';
+}
+function reply(text){
+ if(/เหนื่อย|ท้อ|เครียด/.test(text))return 'เหนื่อยก็พักก่อนนะครับ อย่าลืมดูแลตัวเองด้วย ♡';
+ if(/รัก/.test(text))return 'พูดแบบนี้เติร์ดเขินนะครับ ૮ ˶ᵔ ᵕ ᵔ˶ ა';
+ if(/กิน|ข้าว|หิว/.test(text))return 'หาอะไรอร่อย ๆ กินด้วยนะครับ';
+ if(/คิดถึง/.test(text))return 'อ่านข้อความแล้วอมยิ้มเลยครับ ♡';
+ return ['ครับผม ♡','เล่าให้ฟังอีกได้นะครับ','เติร์ดอ่านอยู่ครับ','วันนี้มีอะไรมาเล่าให้ฟังอีกไหมครับ'][Math.floor(Math.random()*4)];
+}
+function saveNote(){
+ notes=document.getElementById('note').value;
+ localStorage.setItem('thirdNote',notes);
+ document.getElementById('notestatus').textContent='บันทึกแล้ว ♡';
+}
+function toggleMusic(){
+ playing=!playing;
+ openApp('Music');
+}
+function toggleEffects(){
+ effects=!effects;
+ openApp('Settings');
+ document.querySelector('.phone').style.transition=effects?'all .4s':'none';
+}
+function lockPhone(){
+ document.getElementById('lock').style.display='flex';
+}
+function unlock(){
+ document.getElementById('lock').style.display='none';
+}
+function escapeHTML(s){
+ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function updateClock(){
+ const d=new Date();
+ const t=d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',hour12:false});
+ document.getElementById('clock').textContent=t;
+ document.getElementById('locktime').textContent=t;
+}
+updateClock();
+setInterval(updateClock,30000);
+home();
+</script>
 </body>
 </html>
